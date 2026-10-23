@@ -61,11 +61,38 @@ export class CloudflareD1ApiAdapter implements IDatabaseProvisionerPort {
     this.logger?.info(`[CLOUDFLARE D1] Sembrando datos para '${seed.brandName}' en D1 (${databaseId})...`);
 
     try {
+      const rubroLabelMap: Record<string, string> = {
+        MODA_INDUMENTARIA: "Indumentaria & Moda",
+        CALZADO: "Calzados & Marroquinería",
+        FERRETERIA: "Ferretería & Construcción",
+        ALMACEN_KIOSCO: "Almacén & Kiosco",
+        DECO_HOGAR: "Deco & Hogar",
+        GASTRONOMIA: "Gastronomía & Delicatessen",
+        GENERAL: "Tienda General",
+      };
+      const rubroLabel = rubroLabelMap[seed.rubro] || "Tienda General";
+      const isTransfer = !seed.enabledPaymentGateways || seed.enabledPaymentGateways.includes("TRANSFER") ? "1" : "0";
+      const isMp = seed.enabledPaymentGateways?.includes("MERCADOPAGO") ? "1" : "0";
+      const isCash = seed.enabledPaymentGateways?.includes("CASH") ? "1" : "0";
+
       // Inserción de configuración básica y comercio en D1
       const sqlQueries = [
-        `INSERT OR IGNORE INTO settings (key, value) VALUES ('whatsapp_number', '${seed.whatsappNumber}'), ('brand_name', '${seed.brandName}'), ('reservation_hours', '48');`,
+        `INSERT OR REPLACE INTO settings (key, value) VALUES
+          ('whatsapp_number', '${seed.whatsappNumber}'),
+          ('showroom_name', '${seed.brandName}'),
+          ('store_type', '${seed.rubro}'),
+          ('business_vertical', '${seed.rubro}'),
+          ('business_descriptor', '${rubroLabel}'),
+          ('reservation_hours', '48'),
+          ('transfer_enabled', '${isTransfer}'),
+          ('mercadopago_enabled', '${isMp}'),
+          ('cash_enabled', '${isCash}'),
+          ('transfer_bank_name', '${seed.bankName || ""}'),
+          ('transfer_cbu', '${seed.cbu || ""}'),
+          ('transfer_alias', '${seed.alias || ""}'),
+          ('transfer_cuit', '${seed.cuit || ""}');`,
         `INSERT OR IGNORE INTO admin_users (email, name, password_hash, password_salt, role, status, created_at, updated_at) VALUES ('${seed.adminEmail}', '${seed.brandName}', '${seed.adminPasswordHash}', '${seed.adminPasswordSalt}', 'SUPER_ADMIN', 'ACTIVE', ${Date.now()}, ${Date.now()});`,
-        `INSERT OR IGNORE INTO commerces (slug, name, whatsapp_number, is_active, created_at, updated_at) VALUES ('${seed.slug}', '${seed.brandName}', '${seed.whatsappNumber}', 1, ${Date.now()}, ${Date.now()});`,
+        `INSERT OR REPLACE INTO commerces (slug, name, whatsapp_number, is_active, created_at, updated_at) VALUES ('${seed.slug}', '${seed.brandName}', '${seed.whatsappNumber}', 1, ${Date.now()}, ${Date.now()});`,
       ];
 
       for (const query of sqlQueries) {

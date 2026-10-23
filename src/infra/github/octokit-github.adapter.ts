@@ -68,10 +68,22 @@ export class OctokitGithubAdapter implements IGitProvisionerPort {
       const currentContent = Buffer.from(fileRes.content, "base64").toString("utf-8");
 
       // Reemplaza nombre y database_id
-      const updatedContent = currentContent
+      let updatedContent = currentContent
         .replace(/"name":\s*"[^"]+"/, `"name": "${params.wranglerConfig.workerName}"`)
         .replace(/"database_name":\s*"[^"]+"/, `"database_name": "${params.wranglerConfig.databaseName}"`)
         .replace(/"database_id":\s*"[^"]+"/, `"database_id": "${params.wranglerConfig.databaseId}"`);
+
+      if (params.wranglerConfig.vars) {
+        const varsJson = JSON.stringify(params.wranglerConfig.vars, null, 2)
+          .split("\n")
+          .map((line, idx) => (idx === 0 ? line : `  ${line}`))
+          .join("\n");
+        if (updatedContent.includes('"vars":')) {
+          updatedContent = updatedContent.replace(/"vars":\s*\{[\s\S]*?\}/, `"vars": ${varsJson}`);
+        } else {
+          updatedContent = updatedContent.replace(/\}\s*$/, `,\n  "vars": ${varsJson}\n}\n`);
+        }
+      }
 
       // 3. Comitea wrangler.jsonc modificado
       await this.ghFetch(`/repos/${repoFullName}/contents/wrangler.jsonc`, {

@@ -11,6 +11,7 @@ export interface CreateFromTemplateParams {
     workerName: string;
     databaseName: string;
     databaseId: string;
+    vars?: Record<string, string>;
   };
 }
 

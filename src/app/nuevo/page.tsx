@@ -21,6 +21,9 @@ function WizardContent() {
     adminEmail: "",
     adminPassword: "",
     enabledPaymentGateways: ["TRANSFER", "MERCADOPAGO", "CASH"],
+    bankName: "",
+    cbu: "",
+    alias: "",
   });
 
   // Prellenar si viene query param desde el hero

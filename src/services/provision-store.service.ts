@@ -98,6 +98,11 @@ export class ProvisionStoreService {
         adminPasswordHash: hash,
         adminPasswordSalt: salt,
         rubro: input.rubro,
+        enabledPaymentGateways: input.enabledPaymentGateways,
+        bankName: input.bankName,
+        cbu: input.cbu,
+        alias: input.alias,
+        cuit: input.cuit,
       });
 
       // 5. Crear Repositorio GitHub a partir de la plantilla aura-studio
@@ -112,6 +117,12 @@ export class ProvisionStoreService {
           workerName: cleanSlug,
           databaseName: dbResult.databaseName,
           databaseId: dbResult.databaseId,
+          vars: {
+            NEXT_PUBLIC_STORE_NAME: input.name,
+            NEXT_PUBLIC_WHATSAPP_NUMBER: input.whatsappNumber,
+            NEXT_PUBLIC_APP_URL: `https://${cleanSlug}.facuezedrive.workers.dev`,
+            STORE_RUBRO: input.rubro,
+          },
         },
       });
       job.repoUrl = gitResult.repoUrl;

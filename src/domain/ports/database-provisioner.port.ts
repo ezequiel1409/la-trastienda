@@ -10,6 +10,11 @@ export interface DatabaseSeedParams {
   adminPasswordHash: string;
   adminPasswordSalt: string;
   rubro: string;
+  enabledPaymentGateways?: string[];
+  bankName?: string | null;
+  cbu?: string | null;
+  alias?: string | null;
+  cuit?: string | null;
 }
 
 export interface CreateDatabaseResult {

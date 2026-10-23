@@ -59,4 +59,8 @@ export interface CreateStoreInput {
   adminEmail: string;
   adminPassword?: string;
   enabledPaymentGateways?: PaymentGatewayType[];
+  bankName?: string | null;
+  cbu?: string | null;
+  alias?: string | null;
+  cuit?: string | null;
 }
