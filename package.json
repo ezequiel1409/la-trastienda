@@ -1,0 +1,33 @@
+{
+  "name": "la-trastienda",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Orquestador y Fábrica de Tiendas de Ecommerce Nac & Pop",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "better-sqlite3": "12.4.1",
+    "lucide-react": "^1.53.0",
+    "next": "^16.4.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^3.24.2",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@tailwindcss/turbopack": "^4.3.3",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^24.19.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5"
+  }
+}
